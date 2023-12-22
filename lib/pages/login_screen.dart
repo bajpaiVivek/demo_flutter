@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import '../pages/home_screen.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginPage extends StatelessWidget {
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
+  final TextEditingController usernameController = TextEditingController();
 
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -71,12 +70,36 @@ class _LoginPageState extends State<LoginPage> {
               height: 25,
             ),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ));
+                onPressed: () async {
+                 ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(width: 20),
+                        Text('Logging in...'),
+                      ],
+                    ),
+                  ),
+                );
+                await authProvider.login(usernameController.text, passwordController.text);
+
+                
+                if (authProvider.token != null) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                } else {
+                  // Show error message if login fails
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Login failed. Please check your credentials.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+          
+                },
                 },
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(
@@ -94,7 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                   elevation: MaterialStateProperty.all(5.0),
                 ),
                 child: const Text('Login'))
-          ]),
+          ],
+          ),
     );
   }
 }

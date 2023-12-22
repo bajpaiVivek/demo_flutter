@@ -8,8 +8,15 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
+  Future<void> addProduct() async {}
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: addProduct,
+        tooltip: "add Category",
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }

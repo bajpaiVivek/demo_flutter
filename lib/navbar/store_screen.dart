@@ -8,8 +8,15 @@ class Store extends StatefulWidget {
 }
 
 class _StoreState extends State<Store> {
+  Future<void> addProduct() async {}
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: addProduct,
+        tooltip: "add Store",
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }
