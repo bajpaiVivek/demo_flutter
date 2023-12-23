@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   final String baseUrl = 'https://products-9q0g.onrender.com';
+  String? authToken;
 
   Future<Map<String, String>> login(String username, String password) async {
     final response = await http.post(
@@ -12,17 +13,21 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
-      print(data);
-      return {'access_token': data['token']};
+      authToken = data['access_token'];
+      print(authToken);
+      return {'token': data['access_token']};
     } else {
       throw Exception('Failed to log in');
     }
   }
 
-  Future<Map<String, dynamic>> getProfile(String token) async {
+  Future<Map<String, dynamic>> getProfile() async {
+    if (authToken == null) {
+      throw Exception('No authentication token available');
+    }
     final response = await http.get(
       Uri.parse('$baseUrl/auth/profile'),
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $authToken'},
     );
 
     if (response.statusCode == 200) {
@@ -31,6 +36,4 @@ class ApiService {
       throw Exception('Failed to fetch profile');
     }
   }
-
-  // Implement other API methods for Users, Categories, Products, Locations, Warehouses, etc.
 }

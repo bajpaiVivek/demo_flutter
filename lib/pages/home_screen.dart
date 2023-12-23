@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../navbar/category_screen.dart';
 import '../navbar/product_screen.dart';
 import '../navbar/location_screen.dart';
 import '../navbar/store_screen.dart';
 import '../navbar/warehouse_screen.dart';
+import '../providers/auth_provider.dart';
+import '../providers/user_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,15 +18,24 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
-    Category(),
-    Product(),
-    Location(),
-    Store(),
-    Warehouse(),
+    const Category(),
+    const Product(),
+    const Location(),
+    const Store(),
+    const Warehouse(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
+    if (authProvider.token == null) {
+      return Scaffold(
+        body: Center(
+          child: Text('Please log in.'),
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.amber[200],
       appBar: AppBar(
@@ -43,17 +55,24 @@ class _HomePageState extends State<HomePage> {
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
-          children: const <Widget>[
+          children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text(
-                'Drawer Header',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Welcome, ${userProvider.user.username}',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Role: ${userProvider.user.roles.join(', ')}',
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                ],
               ),
             ),
             ListTile(
@@ -83,8 +102,8 @@ class _HomePageState extends State<HomePage> {
         elevation: 10,
         selectedFontSize: 14,
         unselectedFontSize: 12,
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-        items: [
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.category, size: 28),
             label: 'Categories',

@@ -1,4 +1,3 @@
-// user_provider.dart
 import 'package:flutter/material.dart';
 import '../api/api.dart';
 import '../models/user_model.dart';
@@ -8,12 +7,13 @@ class UserProvider extends ChangeNotifier {
   late User _user;
 
   User get user => _user;
-
-  UserProvider(this.apiService);
+  UserProvider(this.apiService) {
+    _user = User(id: 0, username: '', email: '', roles: []);
+  }
 
   Future<void> fetchProfile(String token) async {
     try {
-      final profileData = await apiService.getProfile(token);
+      final profileData = await apiService.getProfile();
       _user = User(
         id: profileData['id'],
         username: profileData['username'],
@@ -22,10 +22,7 @@ class UserProvider extends ChangeNotifier {
       );
       notifyListeners();
     } catch (e) {
-      // Handle fetch profile error
       print('Failed to fetch profile: $e');
     }
   }
-
-  // Implement other user-related methods
 }

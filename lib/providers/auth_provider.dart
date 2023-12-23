@@ -16,11 +16,16 @@ class AuthProvider extends ChangeNotifier {
       String username, String password, ApiService apiService) async {
     try {
       final tokenMap = await apiService.login(username, password);
-      setToken(tokenMap['token']!);
+      final authToken = tokenMap['token'];
+
+      if (authToken != null) {
+        apiService.authToken = authToken;
+        setToken(authToken);
+      } else {
+        print('Login failed: Null authToken received from the API');
+      }
     } catch (e) {
       print('Login failed: $e');
     }
   }
-
-  // Implement other authentication-related methods
 }
