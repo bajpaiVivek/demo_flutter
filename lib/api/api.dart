@@ -21,17 +21,23 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> getProfile() async {
-    if (authToken == null) {
+  Future<Map<String, dynamic>> getProfile(String? token) async {
+    if (token == authToken) {
       throw Exception('No authentication token available');
     }
     final response = await http.get(
       Uri.parse('$baseUrl/auth/profile'),
-      headers: {'Authorization': 'Bearer $authToken'},
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      final Map<String, dynamic> profile = json.decode(response.body);
+      print(profile);
+      return {
+        'id': profile['id'],
+        'username': profile['username'],
+        'roles': profile['roles']
+      };
     } else {
       throw Exception('Failed to fetch profile');
     }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../pages/home_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-//import '../providers/user_provider.dart';
 import '../api/api.dart';
 
 class LoginPage extends StatelessWidget {

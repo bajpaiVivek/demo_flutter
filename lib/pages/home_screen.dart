@@ -24,11 +24,30 @@ class _HomePageState extends State<HomePage> {
     const Store(),
     const Warehouse(),
   ];
+  late UserProvider _userProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchUserProfile();
+    });
+  }
+
+  Future<void> _fetchUserProfile() async {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await _userProvider.fetchProfile(authProvider.token!);
+    } catch (e) {
+      print('Failed to fetch user profile: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final userProvider = Provider.of<UserProvider>(context);
     if (authProvider.token == null) {
       return Scaffold(
         body: Center(
@@ -53,37 +72,15 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Welcome, ${userProvider.user.username}',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Role: ${userProvider.user.roles.join(', ')}',
-                    style: TextStyle(fontSize: 14, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('account'),
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('settings'),
-            ),
-          ],
+        child: FutureBuilder(
+          future: _fetchUserProfile(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return _buildDrawer();
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
         ),
       ),
       body: _pages[_currentIndex],
@@ -126,6 +123,42 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDrawer() {
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        DrawerHeader(
+          decoration: BoxDecoration(
+            color: Colors.blue,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome, ${_userProvider.user.username}',
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Role: ${_userProvider.user.roles.join(', ')}',
+                style: TextStyle(fontSize: 14, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+        ListTile(
+          leading: Icon(Icons.account_circle),
+          title: Text('account'),
+        ),
+        ListTile(
+          leading: Icon(Icons.settings),
+          title: Text('settings'),
+        ),
+        // Add more list tiles or other widgets for navigation items
+      ],
     );
   }
 }

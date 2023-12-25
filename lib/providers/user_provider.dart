@@ -7,19 +7,11 @@ class UserProvider extends ChangeNotifier {
   late User _user;
 
   User get user => _user;
-  UserProvider(this.apiService) {
-    _user = User(id: 0, username: '', email: '', roles: []);
-  }
-
+  UserProvider(this.apiService);
   Future<void> fetchProfile(String token) async {
     try {
-      final profileData = await apiService.getProfile();
-      _user = User(
-        id: profileData['id'],
-        username: profileData['username'],
-        email: profileData['email'],
-        roles: List<String>.from(profileData['roles']),
-      );
+      final profileData = await apiService.getProfile(token);
+      _user = User.fromJson(profileData);
       notifyListeners();
     } catch (e) {
       print('Failed to fetch profile: $e');
