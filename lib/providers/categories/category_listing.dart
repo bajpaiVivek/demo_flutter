@@ -21,7 +21,7 @@ class CategoryProvider extends ChangeNotifier {
                 desc: categoryMap['desc'],
               ))
           .toList();
-
+      print(categoriesList);
       notifyListeners();
     } catch (e) {
       print('Failed to fetch category listing: $e');
