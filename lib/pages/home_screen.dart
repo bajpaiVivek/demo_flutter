@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     if (authProvider.token == null) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: Text('Please log in.'),
         ),
@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.connectionState == ConnectionState.done) {
               return _buildDrawer();
             } else {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
           },
         ),
@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.zero,
       children: <Widget>[
         DrawerHeader(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.blue,
           ),
           child: Column(
@@ -139,21 +139,21 @@ class _HomePageState extends State<HomePage> {
             children: [
               Text(
                 'Welcome, ${_userProvider.user!.username}',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
               const SizedBox(height: 8),
               Text(
                 'Role: ${_userProvider.user!.roles.join(', ')}',
-                style: TextStyle(fontSize: 14, color: Colors.white),
+                style: const TextStyle(fontSize: 14, color: Colors.white),
               ),
             ],
           ),
         ),
-        ListTile(
+        const ListTile(
           leading: Icon(Icons.account_circle),
           title: Text('account'),
         ),
-        ListTile(
+        const ListTile(
           leading: Icon(Icons.settings),
           title: Text('settings'),
         ),
