@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
 import '../providers/categories/category_listing.dart';
+import '../providers/products/product_listing.dart';
 import '../api/api.dart';
 import '../pages/login_screen.dart';
 
@@ -13,6 +14,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider(ApiService())),
         ChangeNotifierProvider(create: (_) => CategoryProvider(ApiService())),
+        ChangeNotifierProvider(create: (_) => ProductProvider(ApiService())),
       ],
       child: const MyApp(),
     ),

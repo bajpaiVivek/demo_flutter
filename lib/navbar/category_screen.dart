@@ -48,8 +48,8 @@ class _CategoryState extends State<Category> {
               itemCount: _categroy.categoryList.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(_categroy.categoryList[index].name),
-                  subtitle: Text(_categroy.categoryList[index].desc),
+                  title: Text(_categroy.categoryList[index]!.name),
+                  subtitle: Text(_categroy.categoryList[index]!.desc),
                 );
               },
             );

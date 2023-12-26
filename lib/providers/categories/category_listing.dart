@@ -4,24 +4,18 @@ import '../../models/category.dart';
 
 class CategoryProvider extends ChangeNotifier {
   final ApiService apiService;
+  List<Category?> _categoryList = [];
+  List<Category?> get categoryList => _categoryList;
 
   CategoryProvider(this.apiService);
-
-  List<Category> _categoryList = [];
-  List<Category> get categoryList => _categoryList;
 
   Future<void> fetchCategoryListing(String token) async {
     try {
       final categories = await apiService.getCategoryListing(token);
-      final List<dynamic> categoriesList = categories['data'];
-      _categoryList = categoriesList
-          .map((categoryMap) => Category(
-                id: categoryMap['id'],
-                name: categoryMap['name'],
-                desc: categoryMap['desc'],
-              ))
+      _categoryList = (categories['categories'] as List<dynamic>)
+          .map((category) => Category.fromJson(category))
           .toList();
-      print(categoriesList);
+      print(_categoryList);
       notifyListeners();
     } catch (e) {
       print('Failed to fetch category listing: $e');

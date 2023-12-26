@@ -55,11 +55,25 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final List<dynamic> categoryList = json.decode(response.body);
+      return {'categories': categoryList};
+    } else {
+      throw Exception('Failed to fetch category listing');
+    }
+  }
 
-      final List<String> categoryStrings =
-          categoryList.map((dynamic item) => item.toString()).toList();
+  Future<Map<String, dynamic>> getProductListing(String token) async {
+    if (token == authToken) {
+      throw Exception('No authentication token available');
+    }
 
-      return {'categories': categoryStrings};
+    final response = await http.get(
+      Uri.parse('$baseUrl/products/listing'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> productList = json.decode(response.body);
+      return {'products': productList};
     } else {
       throw Exception('Failed to fetch category listing');
     }
