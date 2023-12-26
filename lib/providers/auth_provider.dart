@@ -21,7 +21,6 @@ class AuthProvider extends ChangeNotifier {
       if (authToken != null) {
         apiService.authToken = authToken;
         setToken(authToken);
-        print(token);
       } else {
         print('Login failed: Null authToken received from the API');
       }

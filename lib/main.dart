@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
+import '../providers/categories/category_listing.dart';
 import '../api/api.dart';
 import '../pages/login_screen.dart';
 
@@ -11,7 +12,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider(ApiService())),
-        // Add other providers here
+        ChangeNotifierProvider(create: (_) => CategoryProvider(ApiService())),
       ],
       child: const MyApp(),
     ),
