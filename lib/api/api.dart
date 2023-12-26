@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = 'https://products-9q0g.onrender.com';
+  final String baseUrl = 'https://products-jts0.onrender.com';
   String? authToken;
 
-  Future<Map<String, String>> login(String username, String password) async {
+  Future<Map<String, String>> login(String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/auth/login'),
-      body: {'username': username, 'password': password},
+      body: {'email': email, 'password': password},
     );
 
     if (response.statusCode == 200) {
@@ -40,6 +40,28 @@ class ApiService {
       };
     } else {
       throw Exception('Failed to fetch profile');
+    }
+  }
+
+  Future<Map<String, dynamic>> getCategoryListing(String token) async {
+    if (token == authToken) {
+      throw Exception('No authentication token available');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/categories/listing'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> categoryList = json.decode(response.body);
+
+      final List<String> categoryStrings =
+          categoryList.map((dynamic item) => item.toString()).toList();
+
+      return {'categories': categoryStrings};
+    } else {
+      throw Exception('Failed to fetch category listing');
     }
   }
 }

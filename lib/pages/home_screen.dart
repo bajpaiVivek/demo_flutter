@@ -138,12 +138,12 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Welcome, ${_userProvider.user.username}',
+                'Welcome, ${_userProvider.user!.username}',
                 style: TextStyle(fontSize: 18, color: Colors.white),
               ),
               const SizedBox(height: 8),
               Text(
-                'Role: ${_userProvider.user.roles.join(', ')}',
+                'Role: ${_userProvider.user!.roles.join(', ')}',
                 style: TextStyle(fontSize: 14, color: Colors.white),
               ),
             ],

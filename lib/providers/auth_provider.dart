@@ -13,9 +13,9 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> login(
-      String username, String password, ApiService apiService) async {
+      String email, String password, ApiService apiService) async {
     try {
-      final tokenMap = await apiService.login(username, password);
+      final tokenMap = await apiService.login(email, password);
       final authToken = tokenMap['token'];
 
       if (authToken != null) {

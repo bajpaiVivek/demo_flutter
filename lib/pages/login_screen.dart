@@ -5,7 +5,7 @@ import '../providers/auth_provider.dart';
 import '../api/api.dart';
 
 class LoginPage extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
   LoginPage({Key? key}) : super(key: key);
@@ -28,14 +28,14 @@ class LoginPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: TextField(
-                controller: usernameController,
+                controller: emailController,
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.person),
-                  hintText: "Username",
+                  prefixIcon: const Icon(Icons.mail),
+                  hintText: "Email",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  label: const Text("Username"),
+                  label: const Text("Email"),
                 )),
           ),
           const SizedBox(
@@ -74,16 +74,18 @@ class LoginPage extends StatelessWidget {
               onPressed: () async {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Row(
-                      children: [
-                        CircularProgressIndicator(),
-                        SizedBox(width: 20),
-                        Text('Logging in...'),
-                      ],
+                    content: Center(
+                      child: Row(
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(width: 20),
+                          Text('Logging in...'),
+                        ],
+                      ),
                     ),
                   ),
                 );
-                await authProvider.login(usernameController.text,
+                await authProvider.login(emailController.text,
                     passwordController.text, ApiService());
 
                 if (authProvider.token != null) {

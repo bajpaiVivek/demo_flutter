@@ -4,10 +4,11 @@ import '../models/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
   final ApiService apiService;
-  late User _user;
-
-  User get user => _user;
-  UserProvider(this.apiService);
+  User? _user;
+  User? get user => _user;
+  UserProvider(this.apiService) {
+    _user = null;
+  }
   Future<void> fetchProfile(String token) async {
     try {
       final profileData = await apiService.getProfile(token);
