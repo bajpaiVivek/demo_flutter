@@ -48,8 +48,7 @@ class _ProductState extends State<Product> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(_product.productList[index]!.name),
-                  subtitle: Text(
-                      _product.productList[index]!.categoryCode.toString()),
+                  subtitle: Text(_product.productList[index]!.price.toString()),
                 );
               },
             );

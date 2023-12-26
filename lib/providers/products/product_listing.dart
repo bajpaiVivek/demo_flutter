@@ -12,13 +12,13 @@ class ProductProvider extends ChangeNotifier {
   Future<void> fetchProductListing(String token) async {
     try {
       final product = await apiService.getProductListing(token);
-      _productList = (product['product'] as List<dynamic>)
+      _productList = (product['products'] as List<dynamic>)
           .map((product) => Product.fromJson(product))
           .toList();
       print(_productList);
       notifyListeners();
     } catch (e) {
-      print('Failed to fetch category listing: $e');
+      print('Failed to fetch product listing: $e');
     }
   }
 }
