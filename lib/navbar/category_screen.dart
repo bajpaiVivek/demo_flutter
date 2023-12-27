@@ -62,7 +62,7 @@ class _CategoryState extends State<Category> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: addProduct,
+        onPressed: (){},
         tooltip: "add Category",
         child: const Icon(Icons.add),
       ),
