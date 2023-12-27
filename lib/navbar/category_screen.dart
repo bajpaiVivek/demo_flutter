@@ -34,8 +34,8 @@ class _CategoryState extends State<Category> {
   }
 
   void addProduct() {
-    //   Navigator.push(context,
-    //       MaterialPageRoute(builder: (BuildContext context) => CreateCategory()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (BuildContext context) => CreateCategory()));
   }
 
   @override
@@ -70,49 +70,68 @@ class _CategoryState extends State<Category> {
   }
 }
 
-// class CreateCategory extends StatelessWidget {
-//   final TextEditingController catnameController = TextEditingController();
-//   final TextEditingController catdescController = TextEditingController();
-//   CreateCategory({Key? key}) : super(key: key);
+class CreateCategory extends StatelessWidget {
+  final TextEditingController catnameController = TextEditingController();
+  final TextEditingController catdescController = TextEditingController();
+  CreateCategory({Key? key}) : super(key: key);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final cat = Provider.of<NewCategoryProvider>(context);
-//     return Scaffold(
-//       body: Center(
-//         child: Column(
-//           children: [
-//             TextField(
-//                 controller: catnameController,
-//                 decoration: InputDecoration(
-//                   hintText: "CatrgoryName",
-//                   border: OutlineInputBorder(
-//                     borderRadius: BorderRadius.circular(20),
-//                   ),
-//                   label: const Text("Name"),
-//                 )),
-//             SizedBox(height: 20),
-//             TextField(
-//                 controller: catnameController,
-//                 decoration: InputDecoration(
-//                   hintText: "CatrgoryDescription",
-//                   border: OutlineInputBorder(
-//                     borderRadius: BorderRadius.circular(20),
-//                   ),
-//                   label: const Text("Desc"),
-//                 )),
-//             ElevatedButton(
-//               onPressed: () async {
-//                 final apiservice =
-//                     Provider.of<ApiService>(context, listen: false);
-//                 await cat.createCategory(catnameController.text,
-//                     catdescController.text, ApiService());
-//               },
-//               child: Text('Add Product'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    final cat = Provider.of<NewCategoryProvider>(context);
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            TextField(
+                controller: catnameController,
+                decoration: InputDecoration(
+                  hintText: "CatrgoryName",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  label: const Text("Name"),
+                )),
+            SizedBox(height: 20),
+            TextField(
+                controller: catdescController,
+                decoration: InputDecoration(
+                  hintText: "CatrgoryDescription",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  label: const Text("Desc"),
+                )),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  final authProvider =
+                      Provider.of<AuthProvider>(context, listen: false);
+                  final token = authProvider.token;
+
+                  if (token != null) {
+                    await cat.createCategory(
+                      token,
+                      catnameController.text,
+                      catdescController.text,
+                    );
+                    if (cat.createcategory != null) {
+                      if (!context.mounted) return;
+                      Navigator.pop(context);
+                    } else {
+                      print('Failed to create category.');
+                    }
+                  } else {
+                    print('Token is null.');
+                  }
+                } catch (e) {
+                  print('Error: $e');
+                }
+              },
+              child: Text('Add Product'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
