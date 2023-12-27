@@ -61,6 +61,31 @@ class ApiService {
     }
   }
 
+  Future<Map<String, String>> createCategory(
+      String token, String name, String desc) async {
+    if (token == authToken) {
+      throw Exception('No authentication token available');
+    }
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/categories/create'),
+      headers: {'Authorization': 'Bearer $token'},
+      body: {'name': name, 'desc': desc},
+    );
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> newcategory = json.decode(response.body);
+      print(newcategory);
+      return {
+        'id': newcategory['id'],
+        'name': newcategory['name'],
+        'desc': newcategory['desc'],
+      };
+    } else {
+      throw Exception('Failed to create category.');
+    }
+  }
+
   Future<Map<String, dynamic>> getProductListing(String token) async {
     if (token == authToken) {
       throw Exception('No authentication token available');

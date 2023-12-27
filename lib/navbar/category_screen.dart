@@ -1,4 +1,5 @@
 import 'package:demo/providers/categories/category_listing.dart';
+import 'package:demo/providers/categories/new_category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +33,11 @@ class _CategoryState extends State<Category> {
     }
   }
 
-  Future<void> addProduct() async {}
+  // void addProduct() {
+  //   Navigator.push(context,
+  //       MaterialPageRoute(builder: (BuildContext context) => CreateCategory()));
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,3 +69,50 @@ class _CategoryState extends State<Category> {
     );
   }
 }
+
+// class CreateCategory extends StatelessWidget {
+//   final TextEditingController catnameController = TextEditingController();
+//   final TextEditingController catdescController = TextEditingController();
+//   CreateCategory({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final cat = Provider.of<NewCategoryProvider>(context);
+//     return Scaffold(
+//       body: Center(
+//         child: Column(
+//           children: [
+//             TextField(
+//                 controller: catnameController,
+//                 decoration: InputDecoration(
+//                   hintText: "CatrgoryName",
+//                   border: OutlineInputBorder(
+//                     borderRadius: BorderRadius.circular(20),
+//                   ),
+//                   label: const Text("Name"),
+//                 )),
+//             SizedBox(height: 20),
+//             TextField(
+//                 controller: catnameController,
+//                 decoration: InputDecoration(
+//                   hintText: "CatrgoryDescription",
+//                   border: OutlineInputBorder(
+//                     borderRadius: BorderRadius.circular(20),
+//                   ),
+//                   label: const Text("Desc"),
+//                 )),
+//             ElevatedButton(
+//               onPressed: () async {
+//                 final apiservice =
+//                     Provider.of<ApiService>(context, listen: false);
+//                 await cat.createCategory(catnameController.text,
+//                     catdescController.text, ApiService());
+//               },
+//               child: Text('Add Product'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
