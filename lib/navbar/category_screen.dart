@@ -33,10 +33,10 @@ class _CategoryState extends State<Category> {
     }
   }
 
-  // void addProduct() {
-  //   Navigator.push(context,
-  //       MaterialPageRoute(builder: (BuildContext context) => CreateCategory()));
-  // }
+  void addProduct() {
+    //   Navigator.push(context,
+    //       MaterialPageRoute(builder: (BuildContext context) => CreateCategory()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class _CategoryState extends State<Category> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {},
         tooltip: "add Category",
         child: const Icon(Icons.add),
       ),
