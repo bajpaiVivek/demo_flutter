@@ -7,6 +7,7 @@ import '../providers/categories/new_category.dart';
 import '../providers/products/product_listing.dart';
 import '../api/api.dart';
 import '../pages/login_screen.dart';
+import '../pages/home_screen.dart';
 
 void main() {
   runApp(
@@ -30,7 +31,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(),
+      home: Consumer<AuthProvider>(
+        builder: (context, authProvider, child) {
+          if (authProvider.isLoggedIn) {
+            return const HomePage();
+          } else {
+            return LoginPage();
+          }
+        },
+      ),
     );
   }
 }

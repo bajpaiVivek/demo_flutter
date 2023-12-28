@@ -77,7 +77,6 @@ class ApiService {
       final Map<String, dynamic> newcategory = json.decode(response.body);
       print(newcategory);
       return {
-        'id': newcategory['id'],
         'name': newcategory['name'],
         'desc': newcategory['desc'],
       };

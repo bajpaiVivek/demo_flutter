@@ -7,6 +7,7 @@ import '../navbar/store_screen.dart';
 import '../navbar/warehouse_screen.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
+import '../pages/login_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -38,8 +39,12 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _fetchUserProfile() async {
     try {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      await _userProvider.fetchProfile(authProvider.token!);
+      bool isLoggedIn =
+          Provider.of<AuthProvider>(context, listen: false).isLoggedIn;
+      if (isLoggedIn) {
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        await _userProvider.fetchProfile(authProvider.token!);
+      }
     } catch (e) {
       print('Failed to fetch user profile: $e');
     }
@@ -49,10 +54,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     if (authProvider.token == null) {
-      return const Scaffold(
-        body: Center(
-          child: Text('Please log in.'),
-        ),
+      return Scaffold(
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Please login"),
+              SizedBox(height: 25),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => LoginPage()));
+                  },
+                  child: Text("Login"))
+            ]),
       );
     }
     return Scaffold(
@@ -143,7 +160,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Role: ${_userProvider.user!.roles.join(', ')}',
+                'Role: ${_userProvider.user!.roles}',
                 style: const TextStyle(fontSize: 14, color: Colors.white),
               ),
             ],

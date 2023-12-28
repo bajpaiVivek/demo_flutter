@@ -1,60 +1,32 @@
-import 'package:demo/providers/categories/category_listing.dart';
-import 'package:demo/providers/categories/new_category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/auth_provider.dart';
+import '../providers/categories/category_listing.dart';
+import '../providers/categories/new_category.dart';
 
-class Category extends StatefulWidget {
-  const Category({Key? key}) : super(key: key);
-
-  @override
-  State<Category> createState() => _CategoryState();
-}
-
-class _CategoryState extends State<Category> {
-  late CategoryProvider _categroy;
-  @override
-  void initState() {
-    super.initState();
-    _categroy = Provider.of<CategoryProvider>(context, listen: false);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      fetchCategoryListing();
-    });
-  }
-
-  Future<void> fetchCategoryListing() async {
-    try {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      await _categroy.fetchCategoryListing(authProvider.token!);
-    } catch (e) {
-      print('Failed to fetch user profile: $e');
-    }
-  }
-
-  void addProduct() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) => CreateCategory()));
-  }
+class Category extends StatelessWidget {
+  const Category({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final categoryProvider = Provider.of<CategoryProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       body: FutureBuilder(
-        future: fetchCategoryListing(),
+        future: categoryProvider.fetchCategoryListing(authProvider.token!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
             return ListView.builder(
-              itemCount: _categroy.categoryList.length,
+              itemCount: categoryProvider.categoryList.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(_categroy.categoryList[index]!.name),
-                  subtitle: Text(_categroy.categoryList[index]!.desc),
+                  title: Text(categoryProvider.categoryList[index]!.name),
+                  subtitle: Text(categoryProvider.categoryList[index]!.desc),
                 );
               },
             );
@@ -62,45 +34,57 @@ class _CategoryState extends State<Category> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: "add Category",
-        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreateCategory()),
+          );
+        },
+        tooltip: 'Add Category',
+        child: Icon(Icons.add),
       ),
     );
   }
 }
 
 class CreateCategory extends StatelessWidget {
-  final TextEditingController catnameController = TextEditingController();
-  final TextEditingController catdescController = TextEditingController();
-  CreateCategory({Key? key}) : super(key: key);
+  const CreateCategory({super.key});
 
   @override
   Widget build(BuildContext context) {
     final cat = Provider.of<NewCategoryProvider>(context);
+
+    final TextEditingController catnameController = TextEditingController();
+    final TextEditingController catdescController = TextEditingController();
+
     return Scaffold(
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextField(
-                controller: catnameController,
-                decoration: InputDecoration(
-                  hintText: "CatrgoryName",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  label: const Text("Name"),
-                )),
-            SizedBox(height: 20),
+              controller: catnameController,
+              decoration: InputDecoration(
+                hintText: 'Category Name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                label: Text('Name'),
+              ),
+            ),
+            const SizedBox(height: 20),
             TextField(
-                controller: catdescController,
-                decoration: InputDecoration(
-                  hintText: "CatrgoryDescription",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  label: const Text("Desc"),
-                )),
+              controller: catdescController,
+              decoration: InputDecoration(
+                hintText: 'Category Description',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                label: Text('Description'),
+              ),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 try {
@@ -114,11 +98,13 @@ class CreateCategory extends StatelessWidget {
                       catnameController.text,
                       catdescController.text,
                     );
+
                     if (cat.createcategory != null) {
+                      print('Category created successfully.');
                       if (!context.mounted) return;
                       Navigator.pop(context);
                     } else {
-                      print('Failed to create category.');
+                      throw Exception('Error creating category');
                     }
                   } else {
                     print('Token is null.');
@@ -127,7 +113,7 @@ class CreateCategory extends StatelessWidget {
                   print('Error: $e');
                 }
               },
-              child: Text('Add Product'),
+              child: const Text('Add Category'),
             ),
           ],
         ),
